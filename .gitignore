@@ -1,0 +1,14 @@
+__pycache__/
+*.py[cod]
+
+*.egg-info/
+.eggs/
+build/
+dist/
+
+*.so
+*.pyd
+
+# Cython-generated
+*.c
+*.html

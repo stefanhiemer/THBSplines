@@ -166,7 +166,7 @@ class TensorProductSpace(Space):
         :return: numpy array containing the indices of basis functions.
         """
 
-        basis = np.array([], dtype=np.int)
+        basis = np.array([], dtype=int)
 
         for cell_idx in cell_list:
             cell = self.mesh.cells[cell_idx]
@@ -185,7 +185,7 @@ class TensorProductSpace(Space):
         :return: the set of cells in the support of at least one basis function, and a dictionary mapping basis functions to their cell indices.
         """
 
-        cells = np.array([], dtype=np.int)
+        cells = np.array([], dtype=int)
         cells_map = {}
 
         eps = np.spacing(1)

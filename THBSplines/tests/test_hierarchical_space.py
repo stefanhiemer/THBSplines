@@ -199,6 +199,6 @@ def test_partition_of_unity():
         f = T.spaces[T.nlevels - 1].construct_function(u_fine)
         for i in range(N):
             for j in range(N):
-                z[i, j] += f(np.array([x[i], y[j]]))
+                z[i, j] += f(np.array([x[i], y[j]]))[0]
 
     np.testing.assert_allclose(z, 1)

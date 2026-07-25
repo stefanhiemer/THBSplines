@@ -28,13 +28,13 @@ class HierarchicalSpace(Space):
         self.nlevels = 1
         self.spaces = [TensorProductSpace(knots, degrees, dim)] if dim != 2 else [TensorProductSpace2D(knots, degrees, dim)]
         self.mesh = HierarchicalMesh(knots, dim)
-        self.afunc_level = {0: np.array((range(self.spaces[0].nfuncs)), dtype=np.int)}  # active functions on level
-        self.dfunc_level = {0: np.array([], dtype=np.int)}  # deactivated functions on level
+        self.afunc_level = {0: np.array((range(self.spaces[0].nfuncs)), dtype=int)}  # active functions on level
+        self.dfunc_level = {0: np.array([], dtype=int)}  # deactivated functions on level
         self.nfuncs_level = {0: self.spaces[0].nfuncs}
         self.nfuncs = self.nfuncs_level[0]
         self.projections_onedim = []
-        self.afunc = np.array([], np.int)
-        self.dfunc = np.array([], np.int)
+        self.afunc = np.array([], int)
+        self.dfunc = np.array([], int)
         self.truncated = True
         self.degrees = degrees
         self.dim = dim
@@ -49,7 +49,7 @@ class HierarchicalSpace(Space):
 
         if len(self.spaces) < self.mesh.nlevels:
             self.add_level()
-            marked_functions[self.mesh.nlevels] = np.array([], dtype=np.int)
+            marked_functions[self.mesh.nlevels] = np.array([], dtype=int)
 
         self.update_active_functions(marked_functions, new_cells)
 
@@ -63,8 +63,8 @@ class HierarchicalSpace(Space):
             self.spaces.append(refined_space)
             self.projections_onedim.append(projector_onedim)
             self.nlevels += 1
-            self.afunc_level[self.mesh.nlevels - 1] = np.array([], dtype=np.int)
-            self.dfunc_level[self.mesh.nlevels - 1] = np.array([], dtype=np.int)
+            self.afunc_level[self.mesh.nlevels - 1] = np.array([], dtype=int)
+            self.dfunc_level[self.mesh.nlevels - 1] = np.array([], dtype=int)
             self.nfuncs_level[self.mesh.nlevels - 1] = 0
         else:
             raise ValueError('Non-compatible mesh and space levels')
@@ -160,7 +160,7 @@ class HierarchicalSpace(Space):
 
             new_functions = np.array([
                 i for i in new_possible_cells if np.all(np.isin(new_possible_cells[i], aelem_and_delem))
-            ], dtype=np.int)
+            ], dtype=int)
             afunc[level + 1] = np.union1d(afunc[level + 1], new_functions)
 
         # TODO: Not sure if the two following lines are needed
@@ -186,7 +186,7 @@ class HierarchicalSpace(Space):
         :return: np.array of indices
         """
 
-        children = np.array([], dtype=np.int)
+        children = np.array([], dtype=int)
         projection = self.compute_full_projection_matrix(level)
         for func_idx in marked_functions_at_level:
             c = np.flatnonzero(projection[:, func_idx].toarray())
@@ -206,7 +206,7 @@ class HierarchicalSpace(Space):
             func_to_deact = self.spaces[level].get_basis_functions(marked_cells[level])
             func_to_deact = np.intersect1d(func_to_deact, self.afunc_level[level])
 
-            func_to_keep = np.array([], dtype=np.int)
+            func_to_keep = np.array([], dtype=int)
             _, func_cells_map = self.spaces[level].get_cells(func_to_deact)
             for f in func_to_deact:
                 func_cells = func_cells_map[f]
@@ -287,7 +287,7 @@ class HierarchicalSpace(Space):
         :return: a set of cells at the finest refinement level in their common support
         """
 
-        cells = np.array([], dtype=np.int)
+        cells = np.array([], dtype=int)
         fine_cells = self.mesh.meshes[-1].cells
         for i in fine_active_basis:
             supp = self.spaces[-1].basis_supports[i]
